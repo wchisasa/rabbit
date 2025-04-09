@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: rabbit_sdk
+Version: 0.1
+Requires-Dist: playwright
+Dynamic: requires-dist

@@ -1,0 +1,23 @@
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ignore virtual environments 
+venv/
+.env/
+.env.bak/
+.venv/
+
+# Ignore Rabbit-specific profile/config
+.rabbit_profile/
+
+# Ignore database and temporary files
+memory.db
+*.sqlite3
+*.log
+*.tmp
+
+# VSCode project settings (optional)
+.vscode/
+
