@@ -1,7 +1,9 @@
-# Ignore Python cache
+# Ignore Python cache 
 __pycache__/
 *.py[cod]
 *.pyo
+screenshots/
+sentiment_results/
 
 # Ignore virtual environments 
 venv/
@@ -17,6 +19,9 @@ memory.db
 *.sqlite3
 *.log
 *.tmp
+*.screenshots
+*.sentiment_results
+
 
 # VSCode project settings (optional)
 .vscode/
