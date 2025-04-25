@@ -13,12 +13,12 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 setup(
     name="rabbit-sdk",
     version="0.1.0",
-    author="Your Name",
+    author="Warren Chisasa",
     author_email="warrenkalunga96@gmail.com",
     description="A browser-based agent SDK for automating web tasks",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/wchisasa/rabbit-sdk",
+    url="https://github.com/wchisasa/rabbit",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

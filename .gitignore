@@ -26,3 +26,8 @@ memory.db
 # VSCode project settings (optional)
 .vscode/
 
+.env
+credentials.json
+# Ignore credentials and tokens
+token.pickle
+screenshots/

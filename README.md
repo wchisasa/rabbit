@@ -1,18 +1,26 @@
+```markdown
+# 🐇 Rabbit
+
+[![Watch Demo](https://img.youtube.com/vi/iBxRoAtwGO0/hqdefault.jpg)](https://youtu.be/iBxRoAtwGO0)
+
+**Rabbit** is a modular, browser-controlling autonomous agent framework designed for intelligent web-based task execution. Leveraging LLMs and custom tools, Rabbit enables fully autonomous workflows such as research tasks, information extraction, and browser automation across complex multi-step processes.
 
 ---
 
-# 🐇 Rabbit
-
-Rabbit is a modular, browser-controlling autonomous agent framework designed for intelligent web-based task execution. Leveraging LLMs and custom tools, Rabbit enables fully autonomous workflows such as research tasks, information extraction, and browser automation across complex multi-step processes.
-
-## 🚀 Features
+## 🚀 Features 
 
 - 🔁 Agent loop execution (`agent_task_loop.py`)
 - 🌐 Headless browser control with custom tools
-- 🧠 LLM integration with a memory + planning system
+- 🧠 LLM integration with memory + planning system
 - 🔧 Extensible SDK (`rabbit_sdk/`) with modular components
 - 🧪 Unit and workflow testing support
 - 🧪 Example workflows using real-world browser tasks
+
+---
+
+## 📼 Demo
+
+▶️ [Watch a 1-minute demo on YouTube](https://youtu.be/iBxRoAtwGO0)
 
 ---
 
@@ -47,19 +55,29 @@ Rabbit/
 
 ## 🧪 Example: Sentiment Analysis of AI Safety
 
-Here's a quick example using the Rabbit SDK to run a research task across multiple websites:
-
 ```bash
 cd Rabbit/examples
 python3 simple_browser_task.py
 ```
 
-This script will:
+1. Open multiple URLs about AI and safety  
+2. Scrape relevant content  
+3. Run sentiment analysis  
+4. Summarize the key findings  
 
-1. Open multiple URLs about AI and safety
-2. Scrape relevant content
-3. Run sentiment analysis
-4. Summarize the key findings
+---
+
+## 🧪 Example: Sentiment Analysis for Crypto Analysis
+
+```bash
+cd Rabbit/examples
+python3 complex_workflow.py
+```
+
+1. Open multiple URLs about crypto assets  
+2. Scrape relevant content  
+3. Run sentiment analysis  
+4. Summarize the key findings  
 
 ---
 
@@ -68,7 +86,7 @@ This script will:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/rabbit.git
+git clone https://github.com/wchisasa/rabbit.git
 cd rabbit
 ```
 
@@ -98,8 +116,6 @@ GEMINI_API_KEY=your_gemini_api_key_here
 
 ## 🛠 Development & Testing
 
-Run the test suite:
-
 ```bash
 python test_agent.py
 ```
@@ -108,16 +124,14 @@ python test_agent.py
 
 ## 📌 TODO
 
-- [ ] Add support for OpenAI + Claude
-- [ ] Extend toolset for data transformation tasks
-- [ ] Integrate with vector DB for persistent memory
-- [ ] Web UI for visualizing agent reasoning
+- [ ] Add support for OpenAI + Claude  
+- [ ] Extend toolset for data transformation tasks  
+- [ ] Integrate with vector DB for persistent memory  
+- [ ] Web UI for visualizing agent reasoning  
 
 ---
 
 ## 📄 License
 
 MIT License. See [`LICENSE`](LICENSE) for details.
-
----
-
+```

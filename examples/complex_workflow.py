@@ -1,66 +1,162 @@
 #!/usr/bin/env python3
-#Rabbit/examples/complex_workflow.py
-"""Complex workflow example using Rabbit SDK."""
+"""Simplified workflow for cryptocurrency market analysis using Rabbit SDK."""
 
 import sys
 import os
+import asyncio
 import json
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Add project root to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from rabbit_sdk.agent import Agent
+# Load environment variables
+load_dotenv()
+
+from rabbit_sdk.agent import RabbitAgent
 from rabbit_sdk.config import get_config
 from rabbit_sdk.memory_manager import MemoryManager
 
-
-def save_results(results, filename=None):
-    """Save results to a JSON file."""
-    if filename is None:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"workflow_results_{timestamp}.json"
+async def analyze_cryptocurrencies(agent, crypto_list):
+    """Analyze multiple cryptocurrencies in a single browser session."""
+    print("Starting cryptocurrency analysis...")
     
-    with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(results, f, indent=2)
+    # Single consolidated task to analyze all cryptocurrencies
+    crypto_names = ", ".join(crypto_list)
+    task = f"""
+    Navigate to CoinMarketCap and collect data for the following cryptocurrencies: {crypto_names}
     
-    print(f"Results saved to {filename}")
-
-
-def main():
-    """Run a complex multi-step workflow with the agent."""
-    config = get_config()
-    agent = Agent(config)
-    memory = MemoryManager(config)
+    For each cryptocurrency:
+    1. Go to its page on CoinMarketCap
+    2. Collect the following data:
+       - Current price
+       - 24h change percentage
+       - 7d change percentage
+       - Market cap
+       - 24h trading volume
+       - Key recent news headlines (if available)
     
-    # Example of a more complex task with multiple steps and reasoning
-    task = """
-    Complete the following research task:
+    Then navigate to TradingView's crypto market overview to assess general market sentiment.
     
-    1. Navigate to https://news.ycombinator.com/
-    2. Find the top 5 posts on the front page
-    3. For each post:
-       a. Extract the title, link, and points
-       b. Navigate to the post's page
-       c. Extract the first 3 comments
-       d. Return to the main page
-    4. Compile all the information into a structured report
-    5. Save the report as JSON
+    Finally, check Crypto Fear & Greed Index on alternative.me.
+    
+    Compile all findings into a comprehensive JSON report with the following structure:
+    {{
+        "market_overview": {{
+            "sentiment": "...",
+            "fear_greed_index": "..."
+        }},
+        "cryptocurrencies": {{
+            "[crypto_name]": {{
+                "price": "...",
+                "24h_change": "...",
+                "7d_change": "...",
+                "market_cap": "...",
+                "volume_24h": "...",
+                "news": [...]
+            }},
+            ...
+        }},
+        "analysis": {{
+            "top_performer": "...",
+            "worst_performer": "...",
+            "notable_trends": [...],
+            "correlations": [...]
+        }},
+        "outlook": {{
+            "short_term": "...",
+            "medium_term": "..."
+        }}
+    }}
     """
     
-    print("Starting complex workflow...")
-    print("This may take several minutes to complete.")
+    # Only open one browser session for all cryptocurrencies
+    urls = [
+        "https://coinmarketcap.com/",
+        "https://www.tradingview.com/markets/cryptocurrencies/prices-all/",
+        "https://alternative.me/crypto/fear-and-greed-index/"
+    ]
     
-    # Set a longer timeout for complex tasks
-    config["task_timeout"] = 600
+    result = await agent.run_task(
+        task,
+        "consolidated_crypto_analysis",
+        urls
+    )
     
-    # Run the agent with memory persistence
-    result = agent.run(task, memory=memory)
-    
-    # Save the final results
-    save_results(result, "hacker_news_report.json")
-    
-    print("\nWorkflow completed!")
-    print("Check 'hacker_news_report.json' for the results.")
+    return result
 
+async def generate_insights(agent, analysis_data):
+    """Generate trading insights based on the analysis without opening a browser."""
+    print("Generating trading insights...")
+    
+    insights_task = f"""
+    Based on the following cryptocurrency market analysis:
+    
+    {analysis_data}
+    
+    Generate a concise report with:
+    
+    1. Key market trends and patterns
+    2. Notable correlations between cryptocurrencies
+    3. Short-term outlook (24-48 hours)
+    4. Medium-term outlook (1-2 weeks)
+    5. Risk factors to monitor
+    6. Top opportunities based on the data
+    
+    Focus on actionable insights rather than general information.
+    """
+    
+    # No URLs needed as this uses the LLM without browser navigation
+    insights = await agent.run_task(
+        insights_task,
+        "trading_insights",
+        []
+    )
+    
+    return insights
+
+async def main():
+    """Run a simplified cryptocurrency analysis workflow."""
+    config = get_config()
+    agent = RabbitAgent(gemini_api_key=config["gemini_api_key"])
+    memory = MemoryManager()
+    
+    # List of cryptocurrencies to analyze - keep it small for resource efficiency
+    crypto_list = ["bitcoin", "ethereum", "solana"]
+    
+    try:
+        # Step 1: Single browser session for all crypto data collection
+        crypto_analysis = await analyze_cryptocurrencies(agent, crypto_list)
+        memory.save("crypto_analysis", "crypto_data", crypto_analysis)
+        
+        # Step 2: Generate insights without opening a browser
+        insights = await generate_insights(agent, crypto_analysis)
+        memory.save("crypto_analysis", "insights", insights)
+        
+        # Generate final report
+        final_report = {
+            "timestamp": datetime.now().isoformat(),
+            "analysis": crypto_analysis,
+            "insights": insights
+        }
+        
+        # Save report
+        report_filename = f"crypto_report_{datetime.now().strftime('%Y%m%d')}.json"
+        with open(report_filename, "w") as f:
+            json.dump(final_report, f, indent=2)
+        
+        print("\nAnalysis workflow completed!")
+        print(f"Report saved as {report_filename}")
+        
+        return final_report
+        
+    except Exception as e:
+        print(f"Error in workflow: {e}")
+        raise
+    finally:
+        # Ensure browser is closed
+        await agent.close_browser()
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
