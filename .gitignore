@@ -31,3 +31,6 @@ credentials.json
 # Ignore credentials and tokens
 token.pickle
 screenshots/
+rabbit_sdk.egg-info/
+
+rabbit_memory.db
